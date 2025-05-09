@@ -1,6 +1,5 @@
-def greet(name):
-    return f"Hello, {name}!"
+def main():
+    print("Main application logic here.")
 
 if __name__ == "__main__":
-    name = "GitHub Actions"
-    print(greet(name))
+    main()
