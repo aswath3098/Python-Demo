@@ -8,9 +8,10 @@ on:
 
 jobs:
   read-config:
-    runs-on: ubuntu-latest
+    name: Read Config
+    runs-on: windows-latest
     outputs:
-      createTestData: ${{ steps.read.outputs.createTestData }}
+      createTestData: ${{ steps.config.outputs.createTestData }}
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python
@@ -18,15 +19,16 @@ jobs:
         with:
           python-version: '3.10'
       - run: pip install pyyaml
-      - id: read
+      - id: config
         run: |
           CREATE_TEST_DATA=$(python -c "import yaml; print(yaml.safe_load(open('config.yaml'))['createTestData'])")
           echo "createTestData=$CREATE_TEST_DATA" >> $GITHUB_OUTPUT
 
-  test-data-creation:
+  test-data:
+    name: Test Data Creation
     needs: read-config
     if: needs.read-config.outputs.createTestData == 'True'
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
@@ -35,27 +37,42 @@ jobs:
       - run: pip install -r requirements.txt
       - run: python test_data_creator.py
 
-  test-execution:
-    needs: [read-config, test-data-creation]
-    runs-on: ubuntu-latest
+  test:
+    name: Run Tests
+    needs: [read-config, test-data]
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
         with:
           python-version: '3.10'
       - run: pip install -r requirements.txt
-      - run: pytest test_main.py
+      - name: Run Pytest with Allure
+        run: |
+          pytest tests/ --alluredir=allure-results
+      - name: Upload Allure Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: allure-results
+          path: allure-results
 
-  data-reconciliation:
-    needs: test-execution
-    runs-on: ubuntu-latest
+  reconciliation:
+    name: Reconcile Data
+    needs: test
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - run: pip install -r requirements.txt
       - run: python reconciliation.py
 
   reporting:
-    needs: data-reconciliation
-    runs-on: ubuntu-latest
+    name: Generate Report
+    needs: reconciliation
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
-      - run: python reporter.py
+      - name: Echo Report
+        run: echo "Pipeline complete! Check Allure results from previous step."

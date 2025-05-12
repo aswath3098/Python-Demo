@@ -1,5 +1,2 @@
-def reconcile():
-    print("Reconciling data...")
-
-if __name__ == "__main__":
-    reconcile()
+def reconcile_data():
+    print("Data reconciliation completed.")

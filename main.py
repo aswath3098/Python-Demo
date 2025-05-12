@@ -1,5 +1,2 @@
-def main():
-    print("Main application logic here.")
-
-if __name__ == "__main__":
-    main()
+def app_logic():
+    print("Main application logic running...")
