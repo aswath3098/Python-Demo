@@ -50,14 +50,9 @@ jobs:
         with:
           python-version: '3.10'
       - run: pip install -r requirements.txt
-      - name: Run Pytest with Allure
-        run: |
-          pytest tests/ --alluredir=allure-results
-      - name: Upload Allure Results
-        uses: github.com/actions/upload-artifact@v3
-        with:
-          name: allure-results
-          path: allure-results
+      - name: Run Pytest Tests
+        run: pytest tests/
+
 
   reconciliation:
     name: Reconcile Data
