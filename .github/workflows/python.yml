@@ -54,7 +54,7 @@ jobs:
         run: |
           pytest tests/ --alluredir=allure-results
       - name: Upload Allure Results
-        uses: actions/upload-artifact@v3.1.2  # safer than @v3
+        uses: github.com/actions/upload-artifact@v3
         with:
           name: allure-results
           path: allure-results
