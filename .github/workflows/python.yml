@@ -55,7 +55,7 @@ jobs:
 
 
   reconciliation:
-    name: Reconcile Data
+    name: Reconciliation
     needs: test
     runs-on: windows-latest
     steps:
