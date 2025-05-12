@@ -42,7 +42,7 @@ jobs:
 
   test:
     name: Run Tests
-    needs: [read-config, test-data]
+    needs: [ read-config, test-data ]
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
@@ -54,7 +54,7 @@ jobs:
         run: |
           pytest tests/ --alluredir=allure-results
       - name: Upload Allure Results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v3.1.2  # safer than @v3
         with:
           name: allure-results
           path: allure-results
