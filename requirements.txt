@@ -1,3 +1,4 @@
 pytest
+selenium
 pyyaml
 allure-pytest
