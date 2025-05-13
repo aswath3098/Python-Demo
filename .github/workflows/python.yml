@@ -30,7 +30,7 @@ jobs:
   test-data:
     name: Test Data Creation
     needs: read-config
-    if: needs.read-config.outputs.createTestData == 'true'
+    if: needs.read-config.outputs.createTestData == 'True'
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
@@ -39,6 +39,12 @@ jobs:
           python-version: '3.10'
       - run: pip install -r requirements.txt
       - run: python test_data_creator.py
+      - name: Upload dummy_data.txt
+        uses: actions/upload-artifact@v3
+        with:
+          name: dummy-data
+          path: dummy_data.txt
+
 
   test:
     name: Run Tests
