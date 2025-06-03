@@ -26,7 +26,6 @@ jobs:
           echo "createTestData=$CREATE_TEST_DATA" >> $GITHUB_OUTPUT
   
   
-
   test-data:
     name: Test Data Creation
     needs: read-config
