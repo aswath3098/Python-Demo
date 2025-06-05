@@ -50,7 +50,7 @@ jobs:
           python-version: '3.10'
       - run: pip install -r requirements.txt
       - name: Run Pytest Tests
-        run: pytest tests/
+        run: pytest --alluredir=allure-results
 
 
   reconciliation:
@@ -66,10 +66,20 @@ jobs:
       - run: python reconciliation.py
 
   reporting:
-    name: Generate Report
+    name: Generate Allure Report
     needs: reconciliation
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Echo Report
-        run: echo "Pipeline complete! Check Allure results from previous step."
+      - name: Install Allure
+        run: |
+          sudo apt-add-repository ppa:qameta/allure
+          sudo apt-get update
+          sudo apt-get install allure
+      - name: Generate Allure Report
+        run: allure generate allure-results --clean -o allure-report
+      - name: Upload Allure Report
+        uses: actions/upload-artifact@v2
+        with:
+          name: allure-report
+          path: allure-report
